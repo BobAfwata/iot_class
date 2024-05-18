@@ -1,0 +1,7 @@
+lcd
+dht11
+light sensor
+arduino
+jumper wires
+sound sensor
+breadboard
