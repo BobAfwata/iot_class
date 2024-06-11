@@ -5,8 +5,8 @@ import json
 import threading
 
 # Set up serial connection (change the port to your Arduino's port)
-serial_port = 'COM47'  # Example for Linux. For Windows it could be 'COM3', 'COM4', etc.
-baud_rate = 9600  # Set to match the baud rate of your Arduino
+serial_port = 'COM14'  # Example for Linux. For Windows it could be 'COM3', 'COM4', etc.
+baud_rate = 115200  # Set to match the baud rate of your Arduino
 
 ser = serial.Serial(serial_port, baud_rate)
 
