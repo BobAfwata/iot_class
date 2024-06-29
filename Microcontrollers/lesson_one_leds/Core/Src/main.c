@@ -110,7 +110,7 @@ int main(void)
 
 
 	  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 1); // PC13  port C pin 13 GPIO_PIN_SET --1
-		  HAL_Delay(1000);
+	  HAL_Delay(1000);
 		  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 0); // GPIO_PIN_RESET --0
 		  HAL_Delay(200);
 

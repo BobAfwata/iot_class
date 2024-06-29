@@ -408,7 +408,7 @@ int main(void)
  8000510:	2110      	movs	r1, #16
  8000512:	4809      	ldr	r0, [pc, #36]	; (8000538 <main+0x60>)
  8000514:	f000 fc76 	bl	8000e04 <HAL_GPIO_WritePin>
-		  HAL_Delay(1000);
+	  HAL_Delay(1000);
  8000518:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
  800051c:	f000 f9e4 	bl	80008e8 <HAL_Delay>
 		  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 0); // GPIO_PIN_RESET --0
