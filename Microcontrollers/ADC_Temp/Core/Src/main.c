@@ -45,6 +45,8 @@ ADC_HandleTypeDef hadc1;
 
 I2C_HandleTypeDef hi2c1;
 
+UART_HandleTypeDef huart1;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -54,6 +56,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -93,24 +96,13 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_I2C1_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   SSD1306_Init();
-     char snum[5];
-
-     SSD1306_GotoXY (0,0);
-     SSD1306_Puts ("TEMPERATURE ", &Font_11x18, 1);
-     SSD1306_UpdateScreen();
-     HAL_Delay (1000);
-
-     SSD1306_ScrollRight(0,7);
-     HAL_Delay(3000);
-     SSD1306_ScrollLeft(0,7);
-     HAL_Delay(3000);
-     SSD1306_Stopscroll();
-     SSD1306_Clear();
-     SSD1306_GotoXY (35,0);
-     SSD1306_Puts ("TEMP", &Font_11x18, 1);
-
+  SSD1306_Clear();
+  SSD1306_GotoXY(35, 0);
+  SSD1306_Puts("TEMP", &Font_11x18, 1);
+  SSD1306_UpdateScreen();
 
   /* USER CODE END 2 */
 
@@ -118,14 +110,24 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	      float temperature = 12.16;
-	      snprintf(snum, 10, "%.2f", temperature); // @suppress("Float formatting support")
-	      SSD1306_GotoXY (0, 30);
-	      SSD1306_Puts ("             ", &Font_16x26, 1);
-	      SSD1306_UpdateScreen();
-	      SSD1306_Puts ("H", &Font_16x26, 1);
-	      SSD1306_UpdateScreen();
-	      HAL_Delay (500);
+
+	  HAL_ADC_Start(&hadc1);
+	  HAL_ADC_PollForConversion(&hadc1,20);
+
+	  float temperature = HAL_ADC_GetValue(&hadc1);
+	  // maths here
+	  char snum[10];  // Ensure the buffer is large enough to hold the formatted string
+	  snprintf(snum, sizeof(snum), "%.2f ", temperature); // Format the float to a string with 2 decimal places
+
+	 SSD1306_GotoXY(20, 20);
+	 SSD1306_Puts (snum, &Font_11x18, 1);
+	 SSD1306_UpdateScreen();
+	 HAL_UART_Transmit(&huart1, snum, 6, 1000);
+	 HAL_UART_Transmit(&huart1, "\n", 1, 1000);
+	 HAL_Delay (500);
+
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -257,6 +259,39 @@ static void MX_I2C1_Init(void)
   /* USER CODE BEGIN I2C1_Init 2 */
 
   /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief USART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART1_Init 0 */
+
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
+
+  /* USER CODE END USART1_Init 2 */
 
 }
 

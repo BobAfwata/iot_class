@@ -52,6 +52,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 ADC_Temp.list \
 
+OBJCOPY_HEX += \
+ADC_Temp.hex \
+
 
 # All Target
 all: main-build
@@ -61,7 +64,7 @@ main-build: ADC_Temp.elf secondary-outputs
 
 # Tool invocations
 ADC_Temp.elf ADC_Temp.map: $(OBJS) $(USER_OBJS) C:\Users\USER\STM32CubeIDE\workspace_1.11.2\ADC_Temp\STM32F401CCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "ADC_Temp.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\USER\STM32CubeIDE\workspace_1.11.2\ADC_Temp\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ADC_Temp.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "ADC_Temp.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\USER\STM32CubeIDE\workspace_1.11.2\ADC_Temp\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="ADC_Temp.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -75,12 +78,17 @@ ADC_Temp.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+ADC_Temp.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "ADC_Temp.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) ADC_Temp.elf ADC_Temp.list ADC_Temp.map default.size.stdout
+	-$(RM) ADC_Temp.elf ADC_Temp.hex ADC_Temp.list ADC_Temp.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
