@@ -32,6 +32,27 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define R1_PORT GPIOA
+#define R1_PIN GPIO_PIN_3
+
+#define R2_PORT GPIOA
+#define R2_PIN GPIO_PIN_4
+
+#define R3_PORT GPIOA
+#define R3_PIN GPIO_PIN_5
+
+#define R4_PORT GPIOA
+#define R4_PIN GPIO_PIN_6
+
+#define C1_PORT GPIOA
+#define C1_PIN GPIO_PIN_0
+
+#define C2_PORT GPIOA
+#define C2_PIN GPIO_PIN_1
+
+#define C3_PORT GPIOA
+#define C3_PIN GPIO_PIN_2
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -41,6 +62,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
+GPIO_InitTypeDef GPIO_InitStructPrivate = {0};
+uint32_t previousMillis = 0;
+uint32_t currentMillis = 0;
+uint8_t keyPressed = 0;
 
 /* USER CODE BEGIN PV */
 
@@ -56,6 +81,115 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+uint8_t key;
+
+char read_keypad (void)
+{
+	/* Make ROW 1 LOW and all other ROWs HIGH */
+	HAL_GPIO_WritePin (R1_PORT, R1_PIN, GPIO_PIN_RESET);  //Pull the R1 low
+	HAL_GPIO_WritePin (R2_PORT, R2_PIN, GPIO_PIN_SET);  // Pull the R2 High
+	HAL_GPIO_WritePin (R3_PORT, R3_PIN, GPIO_PIN_SET);  // Pull the R3 High
+	HAL_GPIO_WritePin (R4_PORT, R4_PIN, GPIO_PIN_SET);  // Pull the R4 High
+
+	if (!(HAL_GPIO_ReadPin (C1_PORT, C1_PIN)))   // if the Col 1 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C1_PORT, C1_PIN)));   // wait till the button is pressed
+		return '1';
+	}
+
+	if (!(HAL_GPIO_ReadPin (C2_PORT, C2_PIN)))   // if the Col 2 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C2_PORT, C2_PIN)));   // wait till the button is pressed
+		return '2';
+	}
+
+	if (!(HAL_GPIO_ReadPin (C3_PORT, C3_PIN)))   // if the Col 3 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C3_PORT, C3_PIN)));   // wait till the button is pressed
+		return '3';
+	}
+
+
+
+	/* Make ROW 2 LOW and all other ROWs HIGH */
+	HAL_GPIO_WritePin (R1_PORT, R1_PIN, GPIO_PIN_SET);  //Pull the R1 low
+	HAL_GPIO_WritePin (R2_PORT, R2_PIN, GPIO_PIN_RESET);  // Pull the R2 High
+	HAL_GPIO_WritePin (R3_PORT, R3_PIN, GPIO_PIN_SET);  // Pull the R3 High
+	HAL_GPIO_WritePin (R4_PORT, R4_PIN, GPIO_PIN_SET);  // Pull the R4 High
+
+	if (!(HAL_GPIO_ReadPin (C1_PORT, C1_PIN)))   // if the Col 1 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C1_PORT, C1_PIN)));   // wait till the button is pressed
+		return '4';
+	}
+
+	if (!(HAL_GPIO_ReadPin (C2_PORT, C2_PIN)))   // if the Col 2 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C2_PORT, C2_PIN)));   // wait till the button is pressed
+		return '5';
+	}
+
+	if (!(HAL_GPIO_ReadPin (C3_PORT, C3_PIN)))   // if the Col 3 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C3_PORT, C3_PIN)));   // wait till the button is pressed
+		return '6';
+	}
+
+
+
+	/* Make ROW 3 LOW and all other ROWs HIGH */
+	HAL_GPIO_WritePin (R1_PORT, R1_PIN, GPIO_PIN_SET);  //Pull the R1 low
+	HAL_GPIO_WritePin (R2_PORT, R2_PIN, GPIO_PIN_SET);  // Pull the R2 High
+	HAL_GPIO_WritePin (R3_PORT, R3_PIN, GPIO_PIN_RESET);  // Pull the R3 High
+	HAL_GPIO_WritePin (R4_PORT, R4_PIN, GPIO_PIN_SET);  // Pull the R4 High
+
+	if (!(HAL_GPIO_ReadPin (C1_PORT, C1_PIN)))   // if the Col 1 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C1_PORT, C1_PIN)));   // wait till the button is pressed
+		return '7';
+	}
+
+	if (!(HAL_GPIO_ReadPin (C2_PORT, C2_PIN)))   // if the Col 2 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C2_PORT, C2_PIN)));   // wait till the button is pressed
+		return '8';
+	}
+
+	if (!(HAL_GPIO_ReadPin (C3_PORT, C3_PIN)))   // if the Col 3 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C3_PORT, C3_PIN)));   // wait till the button is pressed
+		return '9';
+	}
+
+
+
+
+	/* Make ROW 4 LOW and all other ROWs HIGH */
+	HAL_GPIO_WritePin (R1_PORT, R1_PIN, GPIO_PIN_SET);  //Pull the R1 low
+	HAL_GPIO_WritePin (R2_PORT, R2_PIN, GPIO_PIN_SET);  // Pull the R2 High
+	HAL_GPIO_WritePin (R3_PORT, R3_PIN, GPIO_PIN_SET);  // Pull the R3 High
+	HAL_GPIO_WritePin (R4_PORT, R4_PIN, GPIO_PIN_RESET);  // Pull the R4 High
+
+	if (!(HAL_GPIO_ReadPin (C1_PORT, C1_PIN)))   // if the Col 1 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C1_PORT, C1_PIN)));   // wait till the button is pressed
+		return '*';
+	}
+
+	if (!(HAL_GPIO_ReadPin (C2_PORT, C2_PIN)))   // if the Col 2 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C2_PORT, C2_PIN)));   // wait till the button is pressed
+		return '0';
+	}
+
+	if (!(HAL_GPIO_ReadPin (C3_PORT, C3_PIN)))   // if the Col 3 is low
+	{
+		while (!(HAL_GPIO_ReadPin (C3_PORT, C3_PIN)));   // wait till the button is pressed
+		return '#';
+	}
+
+
+}
 
 /* USER CODE END 0 */
 
@@ -65,6 +199,7 @@ static void MX_I2C1_Init(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -90,23 +225,20 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   SSD1306_Init();
-    char snum[5];
+//    char snum[5];
 
     SSD1306_GotoXY (0,0);
-    SSD1306_Puts ("BOB", &Font_16x26, 1);
-    SSD1306_GotoXY (0, 30);
-    SSD1306_Puts ("AFWATA", &Font_11x18, 1);
+    SSD1306_Puts ("Enter PIN", &Font_11x18, 1);
     SSD1306_UpdateScreen();
     HAL_Delay (1000);
 
-    SSD1306_ScrollRight(0,7);
-    HAL_Delay(3000);
-    SSD1306_ScrollLeft(0,7);
-    HAL_Delay(3000);
-    SSD1306_Stopscroll();
-    SSD1306_Clear();
-    SSD1306_GotoXY (35,0);
-    SSD1306_Puts ("TEMP", &Font_11x18, 1);
+
+    /*HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, 1);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, 1);
+*/
+
+
 
   /* USER CODE END 2 */
 
@@ -114,35 +246,26 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  for ( int x = 1; x <= 10 ; x++ )
-	  	{
-	  		itoa(x, snum, 10);
-	  		SSD1306_GotoXY (0, 30);
-	  		SSD1306_Puts ("             ", &Font_16x26, 1);
-	  		SSD1306_UpdateScreen();
-	  		if(x < 10) {
-	  			SSD1306_GotoXY (53, 30);  // 1 DIGIT
-	  		}
-	  		else if (x < 100 ) {
-	  			SSD1306_GotoXY (45, 30);  // 2 DIGITS
-	  		}
-	  		else if (x < 1000 ) {
-	  			SSD1306_GotoXY (37, 30);  // 3 DIGITS
-	  		}
-	  		else {
-	  			SSD1306_GotoXY (30, 30);  // 4 DIGIS
-	  		}
-	  		SSD1306_Puts (snum, &Font_16x26, 1);
-	  		SSD1306_UpdateScreen();
-	  		HAL_Delay (500);
-	  	    }
+	    char digit = read_keypad ();
+		SSD1306_GotoXY(0, 30);
+		//SSD1306_Clear();
+		SSD1306_Putc(digit, &Font_11x18, 1);
+		SSD1306_UpdateScreen();
+		HAL_Delay(1000);
+
+  }
+
+
+
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
-}
 
+  /* USER CODE END 3 */
+
+}
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -225,15 +348,122 @@ static void MX_I2C1_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
+	  /* GPIO Ports Clock Enable */
+	  __HAL_RCC_GPIOD_CLK_ENABLE();
+	  __HAL_RCC_GPIOA_CLK_ENABLE();
+	  __HAL_RCC_GPIOB_CLK_ENABLE();
 
+	  /*Configure GPIO pin Output Level */
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7, GPIO_PIN_RESET);
+
+	  /*Configure GPIO pins : PA0 PA1 PA2 PA3 */
+	  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3;
+	  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	  GPIO_InitStruct.Pull = GPIO_PULLUP;
+	  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	  /*Configure GPIO pins : PA4 PA5 PA6 PA7 */
+	  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
+	  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	  GPIO_InitStruct.Pull = GPIO_NOPULL;
+	  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  /*currentMillis = HAL_GetTick();
+  if (currentMillis - previousMillis > 10) {
+    Configure GPIO pins : PB6 PB7 PB8 PB9 to GPIO_INPUT
+    GPIO_InitStructPrivate.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6;
+    GPIO_InitStructPrivate.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStructPrivate.Pull = GPIO_NOPULL;
+    GPIO_InitStructPrivate.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStructPrivate);
 
+
+
+
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, 0);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 0);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, 1);
+    if(GPIO_Pin == GPIO_PIN_6 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6))
+    {
+      keyPressed = 35; //ASCII value of #
+    }
+    else if(GPIO_Pin == GPIO_PIN_5 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5))
+    {
+      keyPressed = 57; //ASCII value of 9
+    }
+    else if(GPIO_Pin == GPIO_PIN_4 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4))
+    {
+      keyPressed = 54; //ASCII value of 6
+    }
+    else if(GPIO_Pin == GPIO_PIN_3 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_3))
+    {
+      keyPressed = 51; //ASCII value of 3
+    }
+
+
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, 0);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, 0);
+    if(GPIO_Pin == GPIO_PIN_6 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6))
+    {
+      keyPressed = 48; //ASCII value of 0
+    }
+    else if(GPIO_Pin == GPIO_PIN_5 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5))
+    {
+      keyPressed = 56; //ASCII value of 8
+    }
+    else if(GPIO_Pin == GPIO_PIN_4 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4))
+    {
+      keyPressed = 53; //ASCII value of 5
+    }
+    else if(GPIO_Pin == GPIO_PIN_3 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_3))
+    {
+      keyPressed = 50; //ASCII value of 2
+    }
+
+
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, 1);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 0);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, 0);
+    if(GPIO_Pin == GPIO_PIN_6 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6))
+    {
+      keyPressed = 42; //ASCII value of *
+    }
+    else if(GPIO_Pin == GPIO_PIN_5 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_5))
+    {
+      keyPressed = 55; //ASCII value of 7
+    }
+    else if(GPIO_Pin == GPIO_PIN_4 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4))
+    {
+      keyPressed = 52; //ASCII value of 4
+    }
+    else if(GPIO_Pin == GPIO_PIN_3 && HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_3))
+    {
+      keyPressed = 49; //ASCII value of 1
+    }
+
+
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, 1);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, 1);
+    Configure GPIO pins : PB6 PB7 PB8 PB9 back to EXTI
+    GPIO_InitStructPrivate.Mode = GPIO_MODE_IT_RISING;
+    GPIO_InitStructPrivate.Pull = GPIO_PULLDOWN;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStructPrivate);
+    previousMillis = currentMillis;
+  }*/
+}
 /* USER CODE END 4 */
 
 /**

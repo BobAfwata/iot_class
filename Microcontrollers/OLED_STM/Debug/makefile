@@ -60,8 +60,8 @@ all: main-build
 main-build: OLED_STM.elf secondary-outputs
 
 # Tool invocations
-OLED_STM.elf OLED_STM.map: $(OBJS) $(USER_OBJS) C:\Users\USER\STM32CubeIDE\workspace_1.11.2\OLED_STM\STM32F401CCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "OLED_STM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\USER\STM32CubeIDE\workspace_1.11.2\OLED_STM\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OLED_STM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+OLED_STM.elf OLED_STM.map: $(OBJS) $(USER_OBJS) C:\Users\USER\Desktop\iot_class\Microcontrollers\OLED_STM\STM32F401CCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "OLED_STM.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\USER\Desktop\iot_class\Microcontrollers\OLED_STM\STM32F401CCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="OLED_STM.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
