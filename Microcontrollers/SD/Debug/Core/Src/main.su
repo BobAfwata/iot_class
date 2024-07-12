@@ -1,0 +1,14 @@
+../Core/Src/main.c:89:5:bufsize	24	static
+../Core/Src/main.c:96:6:clear_buffer	16	static
+../Core/Src/main.c:101:6:send_uart	24	static
+../Core/Src/main.c:105:7:read_temperature	16	static
+../Core/Src/main.c:121:6:write_temperature_to_file	56	static
+../Core/Src/main.c:140:5:main	16	static
+../Core/Src/main.c:197:6:SystemClock_Config	88	static
+../Core/Src/main.c:241:13:MX_ADC1_Init	24	static
+../Core/Src/main.c:290:13:MX_SPI1_Init	8	static
+../Core/Src/main.c:326:13:MX_TIM1_Init	40	static
+../Core/Src/main.c:370:13:MX_TIM2_Init	40	static
+../Core/Src/main.c:413:13:MX_USART1_UART_Init	8	static
+../Core/Src/main.c:444:13:MX_GPIO_Init	40	static
+../Core/Src/main.c:482:6:Error_Handler	4	static,ignoring_inline_asm
